@@ -8,5 +8,9 @@ namespace library
 {
     class ENProduct
     {
+        private string code;
+        private string name;
+        private int amount;
+        private DateTime creationDate;
     }
 }
