@@ -13,13 +13,6 @@ namespace library
 {
     public class CADProduct
     {
-        static string cadena = ConfigurationManager.ConnectionStrings["miconexion"].ToString();
-        SqlConnection c = new SqlConnection(cadena);
-    }
 
-    public bool Create(ENProduct en)
-    {
-        
-        return true;
     }
 }
