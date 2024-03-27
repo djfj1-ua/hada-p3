@@ -20,7 +20,7 @@ namespace library
         public float Price { get; set; }
         public int Category { get; set; }
         public DateTime CreationDate { get; set; }
-
+        //En los public, restricciones de variables
         public ENProduct()
         {
             this.Code = "0";

@@ -23,19 +23,29 @@ namespace library
         // Crea el producto en la base de datos
         public bool Create(ENProduct en)
         {
-            bool retValue;
+            bool retValue = false;
 
             SqlConnection c = new SqlConnection(constring);
             try
             {
                 c.Open();
-                SqlCommand com = new SqlCommand("insert into product values (" + en.Code + ", " + en.Name + ", " + en.Amount + ", " + en.Price + ", " + en.Category + ", " + en.CreationDate +");", c);
-                com.ExecuteNonQuery();
+                SqlCommand com = new SqlCommand("INSERT INTO Products VALUES (@Name, @Code, @Amount, @Price, @Category, @CreationDate)", c);
+                com.Parameters.AddWithValue("@Name", en.Name);
+                com.Parameters.AddWithValue("@Code", en.Code);
+                com.Parameters.AddWithValue("@Amount", en.Amount);
+                com.Parameters.AddWithValue("@Price", en.Price);
+                com.Parameters.AddWithValue("@Category", en.Category);
+                com.Parameters.AddWithValue("@CreationDate", en.CreationDate);
+                int count = (int)com.ExecuteNonQuery();
                 retValue = true;
+                if (count < 0)
+                {
+                    retValue = false;
+                }
             }
-            catch
+            catch(SqlException ex)
             {
-                retValue = false;
+                Console.WriteLine("Excepcion con mensaje: " + ex.Message);
             }
             finally
             {
@@ -54,12 +64,27 @@ namespace library
             try
             {
                 c.Open();
-                SqlCommand com = new SqlCommand("update product set (" + en.Code + ", " + en.Name + ", " + en.Amount + ", " + en.Price + ", " + en.Category + ", " + en.CreationDate + ") where code = " + en.Code + ";", c);
-                com.ExecuteNonQuery();
+                SqlCommand com = new SqlCommand("UPDATE Products SET Name = @Name, Amount = @Amount, Price = @Price, Category = @Category, CreationDate = @CreationDate WHERE Code = @CodeParam", c);
+
+                // Agregar parámetros al SqlCommand
+                //com.Parameters.AddWithValue("@Code", en.Code);
+                com.Parameters.AddWithValue("@Name", en.Name);
+                com.Parameters.AddWithValue("@Amount", en.Amount);
+                com.Parameters.AddWithValue("@Price", en.Price);
+                com.Parameters.AddWithValue("@Category", en.Category);
+                com.Parameters.AddWithValue("@CreationDate", en.CreationDate);
+                com.Parameters.AddWithValue("@CodeParam", en.Code); // Parámetro para la cláusula WHERE
+
+                int count = (int)com.ExecuteNonQuery();
                 retValue = true;
+                if (count < 0)
+                {
+                    retValue = false;
+                }
             }
-            catch
+            catch(SqlException ex)
             {
+                Console.WriteLine("Error: {0}", ex.Message);
                 retValue = false;
             }
             finally
@@ -73,19 +98,23 @@ namespace library
         // Crea el producto en la base de datos
         public bool Delete(ENProduct en)
         {
-            bool retValue;
+            bool retValue = true;
 
             SqlConnection c = new SqlConnection(constring);
             try
             {
                 c.Open();
-                SqlCommand com = new SqlCommand("delete from product where code = " + en.Code + ";", c);
-                com.ExecuteNonQuery();
-                retValue = true;
+                SqlCommand com = new SqlCommand("DELETE FROM Products WHERE Code = @Code", c);
+                com.Parameters.AddWithValue("@Code", en.Code);
+                int count = (int)com.ExecuteNonQuery();
+                if (count < 0)
+                {
+                    retValue = false;
+                }
             }
-            catch
+            catch(SqlException ex)
             {
-                retValue = false;
+                Console.WriteLine("No se ha podido borrar el producto: {0}", ex.Message);
             }
             finally
             {
@@ -98,22 +127,34 @@ namespace library
         // Devuelve el producto en la base de datos
         public bool Read(ENProduct en)
         {
-            bool retValue;
+            bool retValue = false;
 
             SqlConnection c = new SqlConnection(constring);
             try
             {
                 c.Open();
-                SqlCommand com = new SqlCommand("select * from producto where code = " + en.Code +  ");", c);
+                SqlCommand com = new SqlCommand("SELECT * FROM Products WHERE code = @Code", c);
+                com.Parameters.AddWithValue("@Code", en.Code);
                 SqlDataReader dr = com.ExecuteReader();
 
-                // falta ver qué hacer con la fila leída
-                dr.Read();
-                dr.Close();
-                retValue = true;
+                if (dr.Read())
+                {
+                    en.Name = dr["Name"].ToString();
+                    en.Amount = (int)dr["Amount"];
+                    en.Category = (int)dr["Category"];
+                    en.Price = Convert.ToSingle(dr["Price"]);
+                    en.CreationDate = (DateTime)dr["CreationDate"];
+
+                    retValue = true;
+                }
+                else
+                {
+                    retValue = false; // No se encontró ningún producto con ese código
+                }
             }
-            catch
+            catch(SqlException ex)
             {
+                Console.WriteLine("Error: {0}", ex.Message);
                 retValue = false;
             }
             finally
@@ -133,13 +174,14 @@ namespace library
             try
             {
                 c.Open();
-                SqlCommand com = new SqlCommand("select * from producto where code = 1;", c);
+                SqlCommand com = new SqlCommand("SELECT Code FROM Products WHERE ID = (SELECT MIN(ID) FROM Products);", c);
                 SqlDataReader dr = com.ExecuteReader();
-
-                // falta ver qué hacer con la fila leída
                 dr.Read();
+                en.Code = dr["Code"].ToString();
+
+                retValue = Read(en);
+
                 dr.Close();
-                retValue = true;
             }
             catch
             {
@@ -161,23 +203,22 @@ namespace library
             SqlConnection c = new SqlConnection(constring);
             try
             {
-                // Pasar a otra cadena el código del producto siguiente (+1 en la BBDD)
-                int auxCode;
-                int.TryParse(en.Code, out auxCode);
-                auxCode++;
-                string nextProduct = auxCode.ToString();
-
                 c.Open();
-                SqlCommand com = new SqlCommand("select * from producto where code = " + nextProduct + ");", c);
+                SqlCommand com = new SqlCommand("SELECT TOP 1 * FROM Products WHERE ID > (SELECT ID FROM Products WHERE Code = @ProductCode) ORDER BY ID ASC;", c);
+                com.Parameters.AddWithValue("@ProductCode", en.Code);
                 SqlDataReader dr = com.ExecuteReader();
-
-                // falta ver qué hacer con la fila leída
                 dr.Read();
+                //Corregir excepcion de si no hay siguiente producto
+                en.Code = dr["Code"].ToString();
+
+                retValue = Read(en);
+
                 dr.Close();
                 retValue = true;
             }
-            catch
+            catch(SqlException ex)
             {
+                Console.WriteLine("Error: {0}.", ex.Message);
                 retValue = false;
             }
             finally
@@ -196,23 +237,22 @@ namespace library
             SqlConnection c = new SqlConnection(constring);
             try
             {
-                // Pasar a otra cadena el código del producto anterior (-1 en la BBDD)
-                int auxCode;
-                int.TryParse(en.Code, out auxCode);
-                auxCode--;
-                string nextProduct = auxCode.ToString();
-
                 c.Open();
-                SqlCommand com = new SqlCommand("select * from producto where code = " + nextProduct + ");", c);
+                SqlCommand com = new SqlCommand("SELECT TOP 1 * FROM Products WHERE ID < (SELECT ID FROM Products WHERE Code = @ProductCode) ORDER BY ID DESC;", c);
+                com.Parameters.AddWithValue("@ProductCode", en.Code);
                 SqlDataReader dr = com.ExecuteReader();
-
-                // falta ver qué hacer con la fila leída
                 dr.Read();
+                //Corregir excepcion de si no hay siguiente producto
+                en.Code = dr["Code"].ToString();
+
+                retValue = Read(en);
+
                 dr.Close();
                 retValue = true;
             }
-            catch
+            catch (SqlException ex)
             {
+                Console.WriteLine("Error: {0}.", ex.Message);
                 retValue = false;
             }
             finally

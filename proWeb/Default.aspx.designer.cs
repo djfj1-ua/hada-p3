@@ -15,120 +15,147 @@ namespace proWeb
     {
 
         /// <summary>
-        /// Control ProductCode.
+        /// Control form1.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ProductCode;
+        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
-        /// Control ProductName.
+        /// Control codeTextBox.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ProductName;
+        protected global::System.Web.UI.WebControls.TextBox codeTextBox;
 
         /// <summary>
-        /// Control ProductAmount.
+        /// Control nameTextBox.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ProductAmount;
+        protected global::System.Web.UI.WebControls.TextBox nameTextBox;
 
         /// <summary>
-        /// Control ProductCategory.
+        /// Control amountTextBox.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ProductCategory;
+        protected global::System.Web.UI.WebControls.TextBox amountTextBox;
 
         /// <summary>
-        /// Control ProductPrice.
+        /// Control categoriasBD.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ProductPrice;
+        protected global::System.Web.UI.HtmlControls.HtmlSelect categoriasBD;
 
         /// <summary>
-        /// Control ProductCreationDate.
+        /// Control priceTextBox.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox ProductCreationDate;
+        protected global::System.Web.UI.WebControls.TextBox priceTextBox;
 
         /// <summary>
-        /// Control CreateButton.
+        /// Control dateTextBox.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button CreateButton;
+        protected global::System.Web.UI.WebControls.TextBox dateTextBox;
 
         /// <summary>
-        /// Control UpdateButton.
+        /// Control BotonCrear.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button UpdateButton;
+        protected global::System.Web.UI.WebControls.Button BotonCrear;
 
         /// <summary>
-        /// Control DeleteButton.
+        /// Control BotonUpdate.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button DeleteButton;
+        protected global::System.Web.UI.WebControls.Button BotonUpdate;
 
         /// <summary>
-        /// Control ReadButton.
+        /// Control BotonDelete.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button ReadButton;
+        protected global::System.Web.UI.WebControls.Button BotonDelete;
 
         /// <summary>
-        /// Control ReadFirstButton.
+        /// Control BotonRead.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button ReadFirstButton;
+        protected global::System.Web.UI.WebControls.Button BotonRead;
 
         /// <summary>
-        /// Control ReadPrevButton.
+        /// Control BotonReadFirst.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button ReadPrevButton;
+        protected global::System.Web.UI.WebControls.Button BotonReadFirst;
 
         /// <summary>
-        /// Control ReadNextButton.
+        /// Control BotonReadNext.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button ReadNextButton;
+        protected global::System.Web.UI.WebControls.Button BotonReadNext;
+
+        /// <summary>
+        /// Control BotonReadPrev.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BotonReadPrev;
+
+        /// <summary>
+        /// Control mostrarProducto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label mostrarProducto;
+
+        /// <summary>
+        /// Control salidaLabel.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label salidaLabel;
     }
 }

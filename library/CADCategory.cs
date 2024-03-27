@@ -21,13 +21,13 @@ namespace library
         // Devuelve la categoría en la base de datos
         public bool Read(ENCategory en)
         {
-            bool retValue;
+            bool retValue = true;
 
             SqlConnection c = new SqlConnection(constring);
             try
             {
                 c.Open();
-                SqlCommand com = new SqlCommand("select * from categoria where id = " + en.id + ");", c);
+                SqlCommand com = new SqlCommand("select * from categories where id = " + en.id + ");", c);
                 SqlDataReader dr = com.ExecuteReader();
 
                 // falta ver qué hacer con la fila leída
@@ -56,19 +56,19 @@ namespace library
             try
             {
                 c.Open();
-                SqlCommand com = new SqlCommand("select * from categoria;", c);
+                SqlCommand com = new SqlCommand("select * from categories;", c);
                 SqlDataReader dr = com.ExecuteReader();
 
                 while (dr.Read())
                 {
-                    categories.Add(new ENCategory(dr["id"], dr["name"]));
+                    categories.Add(new ENCategory((int)dr["id"], dr["name"].ToString()));
                 }
 
                 dr.Close();
             }
-            catch
+            catch(Exception ex)
             {
-                
+                Console.WriteLine("Error: {0}", ex.Message);
             }
             finally
             {
