@@ -36,16 +36,13 @@ namespace library
                 com.Parameters.AddWithValue("@Price", en.Price);
                 com.Parameters.AddWithValue("@Category", en.Category);
                 com.Parameters.AddWithValue("@CreationDate", en.CreationDate);
-                int count = (int)com.ExecuteNonQuery();
+                SqlDataReader dr = com.ExecuteReader();
                 retValue = true;
-                if (count < 0)
-                {
-                    retValue = false;
-                }
             }
             catch(SqlException ex)
             {
                 Console.WriteLine("Excepcion con mensaje: " + ex.Message);
+                retValue = false;
             }
             finally
             {
@@ -58,34 +55,32 @@ namespace library
         // Actualiza el producto en la base de datos
         public bool Update(ENProduct en)
         {
-            bool retValue;
+            bool retValue = false;
 
             SqlConnection c = new SqlConnection(constring);
             try
             {
                 c.Open();
+
                 SqlCommand com = new SqlCommand("UPDATE Products SET Name = @Name, Amount = @Amount, Price = @Price, Category = @Category, CreationDate = @CreationDate WHERE Code = @CodeParam", c);
 
                 // Agregar parámetros al SqlCommand
-                //com.Parameters.AddWithValue("@Code", en.Code);
                 com.Parameters.AddWithValue("@Name", en.Name);
                 com.Parameters.AddWithValue("@Amount", en.Amount);
                 com.Parameters.AddWithValue("@Price", en.Price);
                 com.Parameters.AddWithValue("@Category", en.Category);
                 com.Parameters.AddWithValue("@CreationDate", en.CreationDate);
                 com.Parameters.AddWithValue("@CodeParam", en.Code); // Parámetro para la cláusula WHERE
+                int rowsAffected = com.ExecuteNonQuery();
 
-                int count = (int)com.ExecuteNonQuery();
-                retValue = true;
-                if (count < 0)
+                if (rowsAffected > 0)
                 {
-                    retValue = false;
+                    retValue = true;
                 }
             }
             catch(SqlException ex)
             {
                 Console.WriteLine("Error: {0}", ex.Message);
-                retValue = false;
             }
             finally
             {
@@ -104,12 +99,16 @@ namespace library
             try
             {
                 c.Open();
-                SqlCommand com = new SqlCommand("DELETE FROM Products WHERE Code = @Code", c);
-                com.Parameters.AddWithValue("@Code", en.Code);
-                int count = (int)com.ExecuteNonQuery();
-                if (count < 0)
+                
+                if (!Read(en))
                 {
                     retValue = false;
+                }
+                else
+                {
+                    SqlCommand com = new SqlCommand("DELETE FROM Products WHERE Code = @Code", c);
+                    com.Parameters.AddWithValue("@Code", en.Code);
+                    SqlDataReader dr = com.ExecuteReader();
                 }
             }
             catch(SqlException ex)
@@ -168,23 +167,29 @@ namespace library
         // Devuelve el primer producto en la base de datos
         public bool ReadFirst(ENProduct en)
         {
-            bool retValue;
+            bool retValue = true;
 
             SqlConnection c = new SqlConnection(constring);
             try
             {
                 c.Open();
-                SqlCommand com = new SqlCommand("SELECT Code FROM Products WHERE ID = (SELECT MIN(ID) FROM Products);", c);
+
+                SqlCommand com = new SqlCommand("SELECT * FROM Products WHERE ID = (SELECT MIN(ID) FROM Products);", c);
                 SqlDataReader dr = com.ExecuteReader();
                 dr.Read();
                 en.Code = dr["Code"].ToString();
+                en.Name = dr["Name"].ToString();
+                en.Amount = (int)dr["Amount"];
+                en.Category = (int)dr["Category"];
+                en.Price = Convert.ToSingle(dr["Price"]);
+                en.CreationDate = (DateTime)dr["CreationDate"];
+                dr.Close();
 
                 retValue = Read(en);
-
-                dr.Close();
             }
-            catch
+            catch(SqlException ex)
             {
+                Console.WriteLine("Error: {0}", ex.Message);
                 retValue = false;
             }
             finally
@@ -208,7 +213,7 @@ namespace library
                 com.Parameters.AddWithValue("@ProductCode", en.Code);
                 SqlDataReader dr = com.ExecuteReader();
                 dr.Read();
-                //Corregir excepcion de si no hay siguiente producto
+
                 en.Code = dr["Code"].ToString();
 
                 retValue = Read(en);

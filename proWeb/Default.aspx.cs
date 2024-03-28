@@ -68,7 +68,7 @@ namespace proWeb
                 ENProduct prod = new ENProduct();
                 prod.Code = codeTextBox.Text;
                 prod.Name = nameTextBox.Text;
-                prod.Amount = Convert.ToInt32(amountTextBox.Text);
+                prod.Amount = int.Parse(amountTextBox.Text);
                 prod.Category = categoriasBD.SelectedIndex + 1;
                 prod.Price = float.Parse(priceTextBox.Text);
                 prod.CreationDate = DateTime.Parse(dateTextBox.Text);
@@ -78,14 +78,21 @@ namespace proWeb
             }
             catch (ArgumentException ex)
             {
-                // Manejar la excepción de las variables
+                // Manejar la excepción de las variables.
                 salidaLabel.Text = "Argumento fuera de rango.";
+                Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
+            }
+            catch (FormatException ex)
+            {
+                // Manejar la excepción de los Parse.
+                salidaLabel.Text = "Error al introducir los datos.";
                 Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
             }
             catch (Exception ex)
             {
                 // Manejar otras excepciones no previstas
-                Console.WriteLine("Se produjo una excepción: " + ex.Message);
+                salidaLabel.Text = "No se realizo la acción correctamente.";
+                Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
             }
             LimpiarTextBox();
         }
@@ -115,13 +122,21 @@ namespace proWeb
             }
             catch (ArgumentException ex)
             {
+                // Manejar la excepción de las variables
                 salidaLabel.Text = "Argumento fuera de rango.";
+                Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
+            }
+            catch (FormatException ex)
+            {
+                // Manejar la excepción de las variables
+                salidaLabel.Text = "Error al introducir los datos.";
                 Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
             }
             catch (Exception ex)
             {
                 // Manejar otras excepciones no previstas
-                Console.WriteLine("Se produjo una excepción: " + ex.Message);
+                salidaLabel.Text = "No se realizo la acción correctamente.";
+                Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
             }
             LimpiarTextBox();
         }
@@ -159,6 +174,16 @@ namespace proWeb
             try
             {
                 prod.Code = codeTextBox.Text;
+
+                if (prod.Read())
+                {
+                    mostrarProducto.Text = imprimirProducto(prod);
+                    salidaLabel.Text = "<br/>Se ha leido el producto correctamente.";
+                }
+                else
+                {
+                    salidaLabel.Text = "No se ha podido leer el producto.";
+                }
             }
             catch (ArgumentException ex)
             {
@@ -166,15 +191,6 @@ namespace proWeb
                 Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
             }
 
-            if (prod.Read())
-            {
-                mostrarProducto.Text = imprimirProducto(prod);
-                salidaLabel.Text = "<br/>Se ha leido el producto correctamente.";
-            }
-            else
-            {
-                salidaLabel.Text = "No se ha podido leer el producto.";
-            }
             LimpiarTextBox();
         }
 
@@ -182,15 +198,6 @@ namespace proWeb
         {
             mostrarProducto.Text = "";
             ENProduct prod = new ENProduct();
-            try
-            {
-                prod.Code = codeTextBox.Text;
-            }
-            catch (ArgumentException ex)
-            {
-                salidaLabel.Text = "Argumento fuera de rango.";
-                Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
-            }
 
             if (prod.ReadFirst())
             {
@@ -199,7 +206,7 @@ namespace proWeb
             }
             else
             {
-                salidaLabel.Text = "No se ha podido leer el producto.";
+                salidaLabel.Text = "No existe ningun producto en la base de datos.";
             }
             LimpiarTextBox();
         }
@@ -210,22 +217,35 @@ namespace proWeb
             ENProduct prod = new ENProduct();
             try
             {
-                prod.Code = codeTextBox.Text;
+
+                if (codeTextBox.Text == "" || codeTextBox.Text == null)
+                {
+                    throw new Exception("No se ha especificado ningun codigo de producto.");
+                }
+                else
+                {
+                    prod.Code = codeTextBox.Text;
+                }
+
+                if (prod.ReadNext())
+                {
+                    mostrarProducto.Text = imprimirProducto(prod);
+                    salidaLabel.Text = "<br/>Se ha leido el producto correctamente.";
+                }
+                else
+                {
+                    salidaLabel.Text = "El producto seleccionado es el primero de la base de datos.";
+                }
             }
             catch (ArgumentException ex)
             {
                 salidaLabel.Text = "Argumento fuera de rango.";
                 Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
             }
-
-            if (prod.ReadNext())
+            catch (Exception ex)
             {
-                mostrarProducto.Text = imprimirProducto(prod);
-                salidaLabel.Text = "<br/>Se ha leido el producto correctamente.";
-            }
-            else
-            {
-                salidaLabel.Text = "No se ha podido leer el producto.";
+                salidaLabel.Text = "Se debe elegir un código de producto.";
+                Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
             }
             LimpiarTextBox();
         }
@@ -236,23 +256,37 @@ namespace proWeb
             ENProduct prod = new ENProduct();
             try
             {
-                prod.Code = codeTextBox.Text;
+                
+                if(codeTextBox.Text == "" || codeTextBox.Text == null)
+                {
+                    throw new Exception("No se ha especificado ningun codigo de producto.");
+                }
+                else
+                {
+                    prod.Code = codeTextBox.Text;
+                }
+
+                if (prod.ReadPrev())
+                {
+                    mostrarProducto.Text = imprimirProducto(prod);
+                    salidaLabel.Text = "<br/>Se ha leido el producto correctamente.";
+                }
+                else
+                {
+                    salidaLabel.Text = "El producto seleccionado es el primero de la base de datos.";
+                }
             }
             catch (ArgumentException ex)
             {
                 salidaLabel.Text = "Argumento fuera de rango.";
                 Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
             }
+            catch (Exception ex)
+            {
+                salidaLabel.Text = "Se debe elegir un código de producto.";
+                Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
+            }
 
-            if (prod.ReadPrev())
-            {
-                mostrarProducto.Text = imprimirProducto(prod);
-                salidaLabel.Text = "<br/>Se ha leido el producto correctamente.";
-            }
-            else
-            {
-                salidaLabel.Text = "No se ha podido leer el producto.";
-            }
             LimpiarTextBox();
         }
     }
