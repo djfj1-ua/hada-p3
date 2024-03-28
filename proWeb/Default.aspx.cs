@@ -13,16 +13,19 @@ namespace proWeb
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            CADCategory cat = new CADCategory();
-            List<ENCategory> listacad = new List<ENCategory>();
-            listacad = cat.readAll();
-
-            foreach(ENCategory categoria in listacad)
+            if (!IsPostBack)
             {
-                ListItem item = new ListItem();
-                item.Text = categoria.Name;
-                item.Value = categoria.id.ToString();
-                categoriasBD.Items.Add(item);
+                CADCategory cat = new CADCategory();
+                List<ENCategory> listacad = new List<ENCategory>();
+                listacad = cat.readAll();
+
+                foreach (ENCategory categoria in listacad)
+                {
+                    ListItem item = new ListItem();
+                    item.Text = categoria.Name;
+                    item.Value = categoria.id.ToString();
+                    categoriasBD.Items.Add(item);
+                }
             }
         }
 
@@ -67,27 +70,17 @@ namespace proWeb
                 prod.Name = nameTextBox.Text;
                 prod.Amount = Convert.ToInt32(amountTextBox.Text);
                 prod.Category = categoriasBD.SelectedIndex + 1;
-                prod.Price = Convert.ToInt32(priceTextBox.Text);
-
-                DateTime fecha;
-
-                string formatoFecha = "dd/MM/yyyy"; // Define el formato deseado
-                if (DateTime.TryParseExact(dateTextBox.Text, formatoFecha, CultureInfo.InvariantCulture, DateTimeStyles.None, out fecha))
-                {
-                    prod.CreationDate = fecha;
-                }
-                else
-                {
-                    throw new FormatException("Formato de fecha y hora no válido. Debe ser dd/mm/aaaa hh:mm:ss");
-                }
+                prod.Price = float.Parse(priceTextBox.Text);
+                prod.CreationDate = DateTime.Parse(dateTextBox.Text);
 
                 prod.Create();
                 salidaLabel.Text = "Se ha creado el producto correctamente.";
             }
-            catch (FormatException ex)
+            catch (ArgumentException ex)
             {
-                // Manejar la excepción de formato de fecha
-                Console.WriteLine("Error: " + ex.Message);
+                // Manejar la excepción de las variables
+                salidaLabel.Text = "Argumento fuera de rango.";
+                Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
             }
             catch (Exception ex)
             {
@@ -108,18 +101,7 @@ namespace proWeb
                 prod.Amount = Convert.ToInt32(amountTextBox.Text);
                 prod.Category = categoriasBD.SelectedIndex + 1;
                 prod.Price = Convert.ToInt32(priceTextBox.Text);
-
-                DateTime fecha;
-
-                string formatoFecha = "dd/MM/yyyy"; // Define el formato deseado
-                if (DateTime.TryParseExact(dateTextBox.Text, formatoFecha, CultureInfo.InvariantCulture, DateTimeStyles.None, out fecha))
-                {
-                    prod.CreationDate = fecha;
-                }
-                else
-                {
-                    throw new FormatException("Formato de fecha y hora no válido. Debe ser dd/mm/aaaa hh:mm:ss");
-                }
+                prod.CreationDate = DateTime.Parse(dateTextBox.Text);
 
                 if (prod.Update())
                 {
@@ -131,10 +113,10 @@ namespace proWeb
                 }
                 
             }
-            catch (FormatException ex)
+            catch (ArgumentException ex)
             {
-                // Manejar la excepción de formato de fecha
-                Console.WriteLine("Error: " + ex.Message);
+                salidaLabel.Text = "Argumento fuera de rango.";
+                Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
             }
             catch (Exception ex)
             {
@@ -148,7 +130,16 @@ namespace proWeb
         {
             mostrarProducto.Text = "";
             ENProduct prod = new ENProduct();
-            prod.Code = codeTextBox.Text;
+            try
+            {
+                prod.Code = codeTextBox.Text;
+            }
+            catch (ArgumentException ex)
+            {
+                salidaLabel.Text = "Argumento fuera de rango.";
+                Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
+            }
+
             if (prod.Delete())
             {
                 salidaLabel.Text = "Se ha eliminado el producto correctamente.";
@@ -165,7 +156,16 @@ namespace proWeb
         {
             mostrarProducto.Text = "";
             ENProduct prod = new ENProduct();
-            prod.Code = codeTextBox.Text;
+            try
+            {
+                prod.Code = codeTextBox.Text;
+            }
+            catch (ArgumentException ex)
+            {
+                salidaLabel.Text = "Argumento fuera de rango.";
+                Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
+            }
+
             if (prod.Read())
             {
                 mostrarProducto.Text = imprimirProducto(prod);
@@ -182,7 +182,16 @@ namespace proWeb
         {
             mostrarProducto.Text = "";
             ENProduct prod = new ENProduct();
-            prod.Code = codeTextBox.Text;
+            try
+            {
+                prod.Code = codeTextBox.Text;
+            }
+            catch (ArgumentException ex)
+            {
+                salidaLabel.Text = "Argumento fuera de rango.";
+                Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
+            }
+
             if (prod.ReadFirst())
             {
                 mostrarProducto.Text = imprimirProducto(prod);
@@ -199,7 +208,16 @@ namespace proWeb
         {
             mostrarProducto.Text = "";
             ENProduct prod = new ENProduct();
-            prod.Code = codeTextBox.Text;
+            try
+            {
+                prod.Code = codeTextBox.Text;
+            }
+            catch (ArgumentException ex)
+            {
+                salidaLabel.Text = "Argumento fuera de rango.";
+                Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
+            }
+
             if (prod.ReadNext())
             {
                 mostrarProducto.Text = imprimirProducto(prod);
@@ -216,7 +234,16 @@ namespace proWeb
         {
             mostrarProducto.Text = "";
             ENProduct prod = new ENProduct();
-            prod.Code = codeTextBox.Text;
+            try
+            {
+                prod.Code = codeTextBox.Text;
+            }
+            catch (ArgumentException ex)
+            {
+                salidaLabel.Text = "Argumento fuera de rango.";
+                Console.WriteLine("Product operation has failed.Error: {0}" + ex.Message);
+            }
+
             if (prod.ReadPrev())
             {
                 mostrarProducto.Text = imprimirProducto(prod);

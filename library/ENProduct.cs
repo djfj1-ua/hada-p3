@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,12 +15,100 @@ namespace library
         private float _price { get; set; }
         private int _category { get; set; }
         private DateTime _creationDate { get; set; }
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public int Amount { get; set; }
-        public float Price { get; set; }
+        public string Code 
+        {
+            get 
+            {
+                return _code;
+            }
+            set 
+            {
+                if (value.Length < 1 || value.Length > 16)
+                {
+                    throw new ArgumentException("El código debe tener entre 1 y 16 caracteres.");
+                }
+                else
+                {
+                    _code = value;
+                }
+            } 
+        }
+        public string Name 
+        { 
+            get 
+            {
+                return _name;
+            } 
+            set 
+            { 
+                if(value.Length > 32)
+                {
+                    throw new ArgumentException("El nombre debe tener como máximo 32 caracteres.");
+                }
+                else
+                {
+                    _name = value;
+                }
+            } 
+        }
+        public int Amount 
+        { 
+            get 
+            {
+                return _amount;
+            } 
+            set 
+            {
+                if (value < 0 || value > 9999)
+                {
+                    throw new ArgumentException("La cantidad de unidades debe estar entre 0 y 9999.");
+                }
+                else
+                {
+                    _amount = value;
+                }
+            } 
+        }
+        public float Price 
+        {
+            get 
+            {
+                return _price;   
+            }
+            set
+            {
+                if (value < 0 || value > 9999.99)
+                {
+                    throw new ArgumentException("El precio debe ser un valor entre 0 y 9999.99.");
+                }
+                else
+                {
+                    _price = value;
+                }
+            }
+        }
         public int Category { get; set; }
-        public DateTime CreationDate { get; set; }
+        public DateTime CreationDate 
+        {
+            get 
+            {
+                return _creationDate;
+            }
+            set 
+            {
+                DateTime fecha;
+
+                string formatoFecha = "dd/MM/yyyy h:mm:ss"; // Define el formato deseado
+                if (DateTime.TryParseExact(value.ToString(), formatoFecha, CultureInfo.InvariantCulture, DateTimeStyles.None, out fecha))
+                {
+                    _creationDate = fecha;
+                }
+                else
+                {
+                    throw new ArgumentException("Formato de fecha y hora no válido. Debe ser dd/mm/aaaa hh:mm:ss");
+                }
+            } 
+        }
         //En los public, restricciones de variables
         public ENProduct()
         {
