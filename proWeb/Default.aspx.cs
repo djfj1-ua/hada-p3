@@ -234,7 +234,7 @@ namespace proWeb
                 }
                 else
                 {
-                    salidaLabel.Text = "El producto seleccionado es el primero de la base de datos.";
+                    salidaLabel.Text = "El producto seleccionado es el último de la base de datos.";
                 }
             }
             catch (ArgumentException ex)

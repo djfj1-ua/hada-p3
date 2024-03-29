@@ -203,7 +203,7 @@ namespace library
         // Devuelve el producto siguiente en la base de datos
         public bool ReadNext(ENProduct en)
         {
-            bool retValue;
+            bool retValue = false;
 
             SqlConnection c = new SqlConnection(constring);
             try
@@ -222,6 +222,11 @@ namespace library
                 retValue = true;
             }
             catch(SqlException ex)
+            {
+                Console.WriteLine("Error: {0}.", ex.Message);
+                retValue = false;
+            }
+            catch(InvalidOperationException ex)
             {
                 Console.WriteLine("Error: {0}.", ex.Message);
                 retValue = false;
@@ -256,6 +261,11 @@ namespace library
                 retValue = true;
             }
             catch (SqlException ex)
+            {
+                Console.WriteLine("Error: {0}.", ex.Message);
+                retValue = false;
+            }
+            catch (InvalidOperationException ex)
             {
                 Console.WriteLine("Error: {0}.", ex.Message);
                 retValue = false;
