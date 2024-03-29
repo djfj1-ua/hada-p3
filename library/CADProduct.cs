@@ -192,6 +192,11 @@ namespace library
                 Console.WriteLine("Error: {0}", ex.Message);
                 retValue = false;
             }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine("Error: {0}.", ex.Message);
+                retValue = false;
+            }
             finally
             {
                 c.Close();
